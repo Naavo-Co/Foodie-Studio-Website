@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
 import MainVideo from "../assets/mac&foodsvideo.mp4";
@@ -40,22 +40,6 @@ const FallbackBackground = styled.div`
   bottom: 0;
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   z-index: 0;
-`;
-
-const VideoError = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  z-index: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.2rem;
-  opacity: 0.8;
 `;
 
 const Title = styled(motion.div)`
@@ -124,22 +108,7 @@ const item = {
 const CoverVideo = () => {
   const [videoError, setVideoError] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoAttempted, setVideoAttempted] = useState(false);
   const videoRef = useRef(null);
-
-  useEffect(() => {
-    // Try to play video after component mounts
-    const timer = setTimeout(() => {
-      if (videoRef.current && !videoAttempted) {
-        setVideoAttempted(true);
-        videoRef.current.play().catch(() => {
-          setVideoError(true);
-        });
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [videoAttempted]);
 
   const handleVideoLoad = () => {
     setVideoLoaded(true);
@@ -224,11 +193,7 @@ const CoverVideo = () => {
         </motion.h2>
       </Title>
 
-      {videoError ? (
-        <VideoError>
-          <div>Video loading... Please wait</div>
-        </VideoError>
-      ) : (
+      {!videoError && (
         <video 
           ref={videoRef}
           src={MainVideo} 
@@ -237,14 +202,10 @@ const CoverVideo = () => {
           muted 
           loop 
           playsInline
-          preload="auto"
           onLoadedData={handleVideoLoad}
           onError={handleVideoError}
           onCanPlay={handleVideoPlay}
-          style={{ 
-            opacity: videoLoaded ? 1 : 0, 
-            transition: 'opacity 1s ease-in-out' 
-          }}
+          style={{ opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.5s' }}
         />
       )}
     </VideoContainer>
