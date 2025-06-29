@@ -3,7 +3,7 @@ import React from "react";
 import { useLocomotiveScroll } from "react-locomotive-scroll";
 import styled from "styled-components";
 
-import Logo from "../assets/Svgs/star_white_48dp.svg";
+// import Logo from "../assets/Svgs/star_white_48dp.svg";
 
 const Section = styled.section`
   min-height: 100vh;
@@ -175,7 +175,7 @@ const Footer = () => {
           >
             Made with &hearts; by{" "}
             <a
-              href="#"
+              href="https://github.com/Naavo-Co"
               target={"_blank"}
               rel="dofollow noreferrer"
             >
