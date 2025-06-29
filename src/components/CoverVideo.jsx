@@ -12,6 +12,8 @@ const VideoContainer = styled.section`
     width: 100%;
     height: 100vh;
     object-fit: cover;
+    z-index: 2;
+    position: relative;
 
     @media (max-width: 48em) {
       object-position: center 10%;
@@ -28,8 +30,8 @@ const DarkOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
-  background-color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
+  z-index: 3;
+  background-color: ${(props) => `rgba(${props.theme.bodyRgba},0.4)`};
 `;
 
 const FallbackBackground = styled.div`
@@ -39,7 +41,7 @@ const FallbackBackground = styled.div`
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  z-index: 0;
+  z-index: 1;
 `;
 
 const PlayButton = styled(motion.button)`
