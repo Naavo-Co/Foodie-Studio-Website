@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
 import MainVideo from "../assets/mac&foodsvideo.mp4";
@@ -30,6 +30,16 @@ const DarkOverlay = styled.div`
   bottom: 0;
   z-index: 1;
   background-color: ${(props) => `rgba(${props.theme.bodyRgba},0.6)`};
+`;
+
+const FallbackBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  z-index: 0;
 `;
 
 const Title = styled(motion.div)`
@@ -96,8 +106,29 @@ const item = {
 };
 
 const CoverVideo = () => {
+  const [videoError, setVideoError] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const videoRef = useRef(null);
+
+  const handleVideoLoad = () => {
+    setVideoLoaded(true);
+  };
+
+  const handleVideoError = () => {
+    setVideoError(true);
+  };
+
+  const handleVideoPlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        setVideoError(true);
+      });
+    }
+  };
+
   return (
     <VideoContainer data-scroll>
+      <FallbackBackground />
       <DarkOverlay />
 
       <Title variants={container} initial="hidden" animate="show">
@@ -162,7 +193,21 @@ const CoverVideo = () => {
         </motion.h2>
       </Title>
 
-      <video src={MainVideo} type="video/mp4" autoPlay muted loop />
+      {!videoError && (
+        <video 
+          ref={videoRef}
+          src={MainVideo} 
+          type="video/mp4" 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          onLoadedData={handleVideoLoad}
+          onError={handleVideoError}
+          onCanPlay={handleVideoPlay}
+          style={{ opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.5s' }}
+        />
+      )}
     </VideoContainer>
   );
 };
