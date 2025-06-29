@@ -300,10 +300,6 @@ const CoverVideo = () => {
           </svg>
         </PlayButton>
       )}
-
-      <VideoStatus>
-        {videoError ? "Video Error" : videoLoaded ? "Video Ready" : "Loading..."}
-      </VideoStatus>
     </VideoContainer>
   );
 };
