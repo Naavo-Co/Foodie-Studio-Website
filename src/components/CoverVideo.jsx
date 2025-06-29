@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 
 import MainVideo from "../assets/mac&foodsvideo.mp4";
@@ -40,6 +40,46 @@ const FallbackBackground = styled.div`
   bottom: 0;
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   z-index: 0;
+`;
+
+const PlayButton = styled(motion.button)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  
+  svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
+    margin-left: 5px;
+  }
+`;
+
+const VideoStatus = styled.div`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  z-index: 10;
 `;
 
 const Title = styled(motion.div)`
@@ -108,23 +148,59 @@ const item = {
 const CoverVideo = () => {
   const [videoError, setVideoError] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [showPlayButton, setShowPlayButton] = useState(true);
   const videoRef = useRef(null);
 
   const handleVideoLoad = () => {
     setVideoLoaded(true);
+    console.log("Video loaded successfully");
   };
 
-  const handleVideoError = () => {
+  const handleVideoError = (e) => {
     setVideoError(true);
+    console.error("Video error:", e);
   };
 
   const handleVideoPlay = () => {
+    setVideoPlaying(true);
+    setShowPlayButton(false);
+    console.log("Video started playing");
+  };
+
+  const handleVideoPause = () => {
+    setVideoPlaying(false);
+    setShowPlayButton(true);
+  };
+
+  const handlePlayClick = () => {
     if (videoRef.current) {
-      videoRef.current.play().catch(() => {
+      videoRef.current.play().then(() => {
+        setVideoPlaying(true);
+        setShowPlayButton(false);
+      }).catch((error) => {
+        console.error("Failed to play video:", error);
         setVideoError(true);
       });
     }
   };
+
+  useEffect(() => {
+    // Try to autoplay after a delay
+    const timer = setTimeout(() => {
+      if (videoRef.current && !videoPlaying) {
+        videoRef.current.play().then(() => {
+          setVideoPlaying(true);
+          setShowPlayButton(false);
+        }).catch(() => {
+          // Autoplay failed, show play button
+          setShowPlayButton(true);
+        });
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [videoPlaying]);
 
   return (
     <VideoContainer data-scroll>
@@ -193,21 +269,39 @@ const CoverVideo = () => {
         </motion.h2>
       </Title>
 
-      {!videoError && (
-        <video 
-          ref={videoRef}
-          src={MainVideo} 
-          type="video/mp4" 
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          onLoadedData={handleVideoLoad}
-          onError={handleVideoError}
-          onCanPlay={handleVideoPlay}
-          style={{ opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.5s' }}
-        />
+      <video 
+        ref={videoRef}
+        src={MainVideo} 
+        type="video/mp4" 
+        muted 
+        loop 
+        playsInline
+        preload="auto"
+        onLoadedData={handleVideoLoad}
+        onError={handleVideoError}
+        onPlay={handleVideoPlay}
+        onPause={handleVideoPause}
+        style={{ 
+          opacity: videoLoaded ? 1 : 0, 
+          transition: 'opacity 1s ease-in-out' 
+        }}
+      />
+
+      {showPlayButton && !videoError && (
+        <PlayButton
+          onClick={handlePlayClick}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </PlayButton>
       )}
+
+      <VideoStatus>
+        {videoError ? "Video Error" : videoLoaded ? "Video Ready" : "Loading..."}
+      </VideoStatus>
     </VideoContainer>
   );
 };
