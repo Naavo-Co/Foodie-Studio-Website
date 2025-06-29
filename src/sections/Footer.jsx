@@ -29,7 +29,7 @@ const LogoContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  img {
+  svg {
     width: 10vw;
     height: auto;
   }
@@ -126,21 +126,7 @@ const Footer = () => {
   return (
     <Section>
       <LogoContainer>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          enableBackground="new 0 0 24 24"
-          height="230px"
-          viewBox="0 0 24 24"
-          width="230px"
-          fill="none"
-        >
-          <g>
-            <path d="M20 10H4c0 2.21 1.79 4 4 4 0 2.21 1.79 4 4 4s4-1.79 4-4c2.21 0 4-1.79 4-4zm-4 0v-.5c0-.83-.67-1.5-1.5-1.5S13 8.67 13 9.5V10h3zm-5 0v-.5c0-.83-.67-1.5-1.5-1.5S8 8.67 8 9.5V10h3zm-4 0v-.5c0-.83-.67-1.5-1.5-1.5S5 8.67 5 9.5V10h2z" fill="white" />
-          </g>
-        </svg>
-        <h3 data-scroll data-scroll-speed="-1">
-          Foodie Studio
-        </h3>
+        <h3>Foodie Studio</h3>
       </LogoContainer>
       <FooterComponent
         initial={{ y: "-400px" }}
@@ -189,9 +175,9 @@ const Footer = () => {
           >
             Made with &hearts; by{" "}
             <a
-              // href="http://devdreaming.com"
-              // target={"_blank"}
-              // rel="dofollow noreferrer"
+              href="#"
+              target={"_blank"}
+              rel="dofollow noreferrer"
             >
               Naavo & Co.
             </a>

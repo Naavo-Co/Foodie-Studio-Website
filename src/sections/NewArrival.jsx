@@ -53,26 +53,12 @@ const HeroTitle = styled(motion.h1)`
   background-clip: text;
 `;
 
-const HeroSubtitle = styled(motion.p)`
-  font-size: 1.3rem;
-  opacity: 0.9;
+const HeroSubtitle = styled.p`
+  font-size: 1.2rem;
+  opacity: 0.8;
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
-`;
-
-const Container = styled.div`
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
-`;
-
-const SectionTitle = styled(motion.h2)`
-  font-size: clamp(2rem, 5vw, 3rem);
-  text-align: center;
-  color: white;
-  margin-bottom: 3rem;
-  font-weight: 300;
 `;
 
 const CarouselWrapper = styled.div`
@@ -297,7 +283,6 @@ const featuredItems = [
 const NewArrival = () => {
   const [current, setCurrent] = useState(0);
   const next = () => setCurrent((c) => (c + 1) % featuredItems.length);
-  const prev = () => setCurrent((c) => (c - 1 + featuredItems.length) % featuredItems.length);
   React.useEffect(() => {
     const timer = setTimeout(next, 4000);
     return () => clearTimeout(timer);
